@@ -26,7 +26,6 @@ GENDERS_INTERNAL = ("male", "female")  # must agree with lines before
 N_SPEAKERS_M = "n_speakers_M"
 N_SPEAKERS_F = "n_speakers_F"
 
-SENTENCE_SRC = "sentence_source"
 SPEAKER_GENDER = "speaker_gender"
 SPEAKER_ID = "speaker_id"
 SENTENCE = "sentence"
@@ -149,7 +148,6 @@ SIGNED_CHI_SQUARE = "signed_chi_square"
 RANDOM = "random"
 
 OUTPUT_COLUMNS = [
-    SENTENCE_SRC,
     SPEAKER_GENDER,
     SPEAKER_GENDER_PRED,
     SPK_GENDER_PROBA,
