@@ -141,12 +141,18 @@ Lime method:
 python python/classification/explainability.py lime -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/voc/lime -d "," -msl 128 -nlimes 500 -limea 0.001 -cs "[spk_gender_pred_proba] > 0.6" -srtex
 ```
 
+## Citation
 
+If you use EvalSubtitle in your research, please cite the following paper:
 
+François Buet, Camille Guinaudeau, Cyril Grouin, Sahar Ghannay, Shin'Ichi Satoh. Utiliser l'explicabilité des modèles pour mettre en évidence les expressions genrées dans la parole. *35èmes Journées d'Études sur la Parole (JEP 2024) 31ème Conférence sur le Traitement Automatique des Langues Naturelles (TALN 2024) 26ème Rencontre des Étudiants Chercheurs en Informatique pour le Traitement Automatique des Langues (RECITAL 2024)*, Jul 2024, Toulouse, France. pp.695-707. [⟨hal-04623052⟩](https://inria.hal.science/hal-04623052)
 
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
 
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
 
-
-
-
+[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
 
