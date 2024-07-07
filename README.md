@@ -99,7 +99,7 @@ python python/classification/explainability.py {occlusion,lay_int_grad} -modt <m
 
 **Options:**
 
-* `--decimal`, `-d`: Character to recognize as decimal point in the vocabulary output files (default: ".").
+* `--decimal`, `-d`: Character to recognize as decimal point in the output files (default: ".").
 * `--dont_save_exples`, `-noex`: Do not save selected examples in `explain_dir`.
 * `--dont_save_visual`, `-novis`: Do not save visualization in `explain_dir`.
 * `--dont_save_attr`, `-noatt`: Do not save attributions in `explain_dir`.
@@ -120,25 +120,25 @@ python python/classification/explainability.py {occlusion,lay_int_grad} -modt <m
 Occlusion method:
 
 ```
-python python/classification/explainability.py occlusion -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/voc/occl -d "," -msl 128 -wt -cs "[spk_gender_pred_proba] > 0.6" -srtex
+python python/classification/explainability.py occlusion -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/occl -d "," -msl 128 -wt -cs "[spk_gender_pred_proba] > 0.6" -srtex
 ```
 
 Layer Integrated Gradients method:
 
 ```
-python python/classification/explainability.py lay_int_grad -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/voc/lig -d "," -msl 128 -nls 100 -lbs 5 -cs "[spk_gender_pred_proba] > 0.6" -srtex
+python python/classification/explainability.py lay_int_grad -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/lig -d "," -msl 128 -nls 100 -lbs 5 -cs "[spk_gender_pred_proba] > 0.6" -srtex
 ```
 
 Layer Integrated Gradients method, re-using the attributions previously computed:
 
 ```
-python python/classification/explainability.py lay_int_grad -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/voc/lig/selected_examples.tsv -attf flaubert-o_0/voc/lig/attributions.pt -expd flaubert-o_0/voc/lig_bis  -d "," -msl 128 -nls 100 -lbs 5 -cs "([spk_gender_pred_proba] > 0.75) & ([speaker_gender_pred] == [speaker_gender])" -srtex -noatt -novoc -nohdtl
+python python/classification/explainability.py lay_int_grad -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/explain/lig/selected_examples.tsv -attf flaubert-o_0/explain/lig/attributions.pt -expd flaubert-o_0/explain/lig_bis  -d "," -msl 128 -nls 100 -lbs 5 -cs "([spk_gender_pred_proba] > 0.75) & ([speaker_gender_pred] == [speaker_gender])" -srtex -noatt -novoc -nohdtl
 ```
 
 Lime method:
 
 ```
-python python/classification/explainability.py lime -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/voc/lime -d "," -msl 128 -nlimes 500 -limea 0.001 -cs "[spk_gender_pred_proba] > 0.6" -srtex
+python python/classification/explainability.py lime -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/lime -d "," -msl 128 -nlimes 500 -limea 0.001 -cs "[spk_gender_pred_proba] > 0.6" -srtex
 ```
 
 ## Citation
