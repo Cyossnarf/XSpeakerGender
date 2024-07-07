@@ -695,9 +695,9 @@ def lime(model_class, tokenizer_class, model_dir_path, test_file_path, explain_d
             attr_df.to_csv(attr_vocab_file_path, sep="\t", index=True, decimal=decimal, columns=columns)
 
 
-def attr_predictivity(model_name, tokenizer_class, test_file_path, attr_file_path, stats_file_path=None,
-                      decimal=".", hyperparams="", max_len=brt.MAX_SEQ_LEN, criteria_str=None, ci=False,
-                      n_bootstraps=cst.N_BOOTSTRAPS, alpha=cst.CI_ALPHA, cond_column=None):
+def attr_coherence(model_name, tokenizer_class, test_file_path, attr_file_path, stats_file_path=None,
+                   decimal=".", hyperparams="", max_len=brt.MAX_SEQ_LEN, criteria_str=None, ci=False,
+                   n_bootstraps=cst.N_BOOTSTRAPS, alpha=cst.CI_ALPHA, cond_column=None):
     hp = ", %s" % hyperparams if hyperparams else ""
     model_dir_path = attr_file_path
 
@@ -738,10 +738,10 @@ def attr_predictivity(model_name, tokenizer_class, test_file_path, attr_file_pat
         attr_score = attributions.sum()
         attr_scores.append(attr_score)
 
-    # Code shared with profile_predictivity
-    cut.predictivity(model_name, model_dir_path, test_file_path, df, attr_scores, hp=hp,
-                     stats_file_path=stats_file_path, decimal=decimal, ci=ci, n_bootstraps=n_bootstraps, alpha=alpha,
-                     cond_column=cond_column)
+    # Code shared with profile_coherence
+    cut.coherence(model_name, model_dir_path, test_file_path, df, attr_scores, hp=hp,
+                  stats_file_path=stats_file_path, decimal=decimal, ci=ci, n_bootstraps=n_bootstraps, alpha=alpha,
+                  cond_column=cond_column)
 
 
 # MAIN  ################################################################################################################
@@ -749,7 +749,7 @@ def attr_predictivity(model_name, tokenizer_class, test_file_path, attr_file_pat
 def parse_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("mode", type=str, choices=["occlusion", "lay_int_grad", "lime", "attr_predictivity"],
+    parser.add_argument("mode", type=str, choices=["occlusion", "lay_int_grad", "lime", "attr_coherence"],
                         help="explainability method to use")
 
     parser.add_argument("--model_type", "-modt", choices=list(brt.MODEL_TYPES.keys()),
@@ -871,10 +871,10 @@ def main(args):
              save_exples=save_exples, save_visual=save_visual, save_attr=save_attr, save_vocab=save_vocab,
              save_hd_tl=save_hd_tl, attr_file_path=attr_file_path, sort_exples=sort_exples)
 
-    elif mode == "attr_predictivity":
-        attr_predictivity(model_name, tokenizer_class, test_file_path, attr_file_path, stats_file_path=stats_file_path,
-                          decimal=decimal, hyperparams=hyperparams, max_len=max_len, criteria_str=criteria_str, ci=ci,
-                          n_bootstraps=n_bootstraps, alpha=ci_alpha, cond_column=cond_column)
+    elif mode == "attr_coherence":
+        attr_coherence(model_name, tokenizer_class, test_file_path, attr_file_path, stats_file_path=stats_file_path,
+                       decimal=decimal, hyperparams=hyperparams, max_len=max_len, criteria_str=criteria_str, ci=ci,
+                       n_bootstraps=n_bootstraps, alpha=ci_alpha, cond_column=cond_column)
 
 
 if __name__ == "__main__":

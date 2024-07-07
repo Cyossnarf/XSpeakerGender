@@ -186,10 +186,10 @@ def rand_profile(model_name, tokenizer_class, data_file_paths, vocab_dir_path, d
             attr_df.to_csv(attr_vocab_file_path, sep="\t", index=True, decimal=decimal, columns=columns)
 
 
-def profile_predictivity(model_name, tokenizer_class, test_file_path, vocab_file_path, attr_column,
-                         stats_file_path=None, decimal=".", hyperparams="", max_len=brt.MAX_SEQ_LEN, criteria_str=None,
-                         criteria_str2=None, ci=False, n_bootstraps=cst.N_BOOTSTRAPS, alpha=cst.CI_ALPHA,
-                         cond_column=None):
+def profile_coherence(model_name, tokenizer_class, test_file_path, vocab_file_path, attr_column,
+                      stats_file_path=None, decimal=".", hyperparams="", max_len=brt.MAX_SEQ_LEN, criteria_str=None,
+                      criteria_str2=None, ci=False, n_bootstraps=cst.N_BOOTSTRAPS, alpha=cst.CI_ALPHA,
+                      cond_column=None):
     hp = ", col: %s, %s" % (attr_column, hyperparams) if hyperparams else ", col: %s" % attr_column
     model_dir_path = vocab_file_path
 
@@ -241,10 +241,10 @@ def profile_predictivity(model_name, tokenizer_class, test_file_path, vocab_file
         attr_score = sum([profile.get(input_id.item(), 0) for input_id in input_ids[0]])
         attr_scores.append(attr_score)
 
-    # Code shared with attr_predictivity
-    cut.predictivity(model_name, model_dir_path, test_file_path, df, attr_scores, hp=hp, rm_neutral=True,
-                     stats_file_path=stats_file_path, decimal=decimal, ci=ci, n_bootstraps=n_bootstraps, alpha=alpha,
-                     cond_column=cond_column)
+    # Code shared with attr_coherence
+    cut.coherence(model_name, model_dir_path, test_file_path, df, attr_scores, hp=hp, rm_neutral=True,
+                  stats_file_path=stats_file_path, decimal=decimal, ci=ci, n_bootstraps=n_bootstraps, alpha=alpha,
+                  cond_column=cond_column)
 
 
 # MAIN  ################################################################################################################
@@ -252,7 +252,7 @@ def profile_predictivity(model_name, tokenizer_class, test_file_path, vocab_file
 def parse_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("mode", type=str, choices=["freq_profile", "rand_profile", "profile_predictivity"])
+    parser.add_argument("mode", type=str, choices=["freq_profile", "rand_profile", "profile_coherence"])
 
     parser.add_argument("--model_type", "-modt", choices=list(brt.MODEL_TYPES.keys()),
                         help="type that defines model and tokenizer classes")
@@ -346,11 +346,11 @@ def main(args):
         rand_profile(model_name, tokenizer_class, data_file_paths, vocab_dir_path, decimal=decimal,
                      save_vocab=save_vocab, save_hd_tl=save_hd_tl, seed=seed, sent_column=sent_column)
 
-    elif mode == "profile_predictivity":
-        profile_predictivity(model_name, tokenizer_class, test_file_path, vocab_file_path, attr_column,
-                             stats_file_path=stats_file_path, decimal=decimal, hyperparams=hyperparams,
-                             max_len=max_seq_len, criteria_str=criteria_str, criteria_str2=criteria_str2, ci=ci,
-                             n_bootstraps=n_bootstraps, alpha=ci_alpha, cond_column=cond_column)
+    elif mode == "profile_coherence":
+        profile_coherence(model_name, tokenizer_class, test_file_path, vocab_file_path, attr_column,
+                          stats_file_path=stats_file_path, decimal=decimal, hyperparams=hyperparams,
+                          max_len=max_seq_len, criteria_str=criteria_str, criteria_str2=criteria_str2, ci=ci,
+                          n_bootstraps=n_bootstraps, alpha=ci_alpha, cond_column=cond_column)
 
 
 if __name__ == "__main__":

@@ -11,9 +11,9 @@ import classification.metrics as mtr
 import utils.constants as cst
 
 
-def predictivity(model_name, model_dir_path, test_file_path, df, attr_scores, hp="", rm_neutral=False,
-                 stats_file_path=None, decimal=".", ci=False, n_bootstraps=cst.N_BOOTSTRAPS, alpha=cst.CI_ALPHA,
-                 cond_column=None):
+def coherence(model_name, model_dir_path, test_file_path, df, attr_scores, hp="", rm_neutral=False,
+              stats_file_path=None, decimal=".", ci=False, n_bootstraps=cst.N_BOOTSTRAPS, alpha=cst.CI_ALPHA,
+              cond_column=None):
 
     df[cst.SENT_ATTR_REL_SCORE] = attr_scores
     df[cst.SENT_ATTR_LABEL] = df[cst.SENT_ATTR_REL_SCORE] < 0
