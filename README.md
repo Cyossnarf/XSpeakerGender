@@ -143,7 +143,7 @@ python python/classification/explainability.py lime -modt flaubert -modd flauber
 
 ## Citation
 
-If you use EvalSubtitle in your research, please cite the following paper:
+If you use XSpeakerGender in your research, please cite the following paper:
 
 François Buet, Camille Guinaudeau, Cyril Grouin, Sahar Ghannay, Shin'Ichi Satoh. Utiliser l'explicabilité des modèles pour mettre en évidence les expressions genrées dans la parole. *35èmes Journées d'Études sur la Parole (JEP 2024) 31ème Conférence sur le Traitement Automatique des Langues Naturelles (TALN 2024) 26ème Rencontre des Étudiants Chercheurs en Informatique pour le Traitement Automatique des Langues (RECITAL 2024)*, Jul 2024, Toulouse, France. pp.695-707. [⟨hal-04623052⟩](https://inria.hal.science/hal-04623052)
 
