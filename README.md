@@ -11,7 +11,7 @@
 * captum (0.6.0)
 * ipython (8.8.0)
 
-## Gender classification and vocabulary extraction
+## Gender classification and attributions
 
 ### Fine-tune a BERT classifier
 
