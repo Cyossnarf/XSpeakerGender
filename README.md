@@ -2,14 +2,17 @@
 
 ## Requirements (tested version)
 
-* numpy (1.23.5)
+* numpy (1.24.4)
 * pandas (1.5.2)
 * pytorch (2.0.0)
-* transformers (4.27.4)
-* scikit-learn (1.0.2)
-* sentencepiece (0.1.95) (if using CamemBERT)
-* captum (0.6.0)
-* ipython (8.8.0)
+* transformers (4.27.3)
+* scikit-learn (1.4.1.post1)
+* sentencepiece (0.2.0) (if using CamemBERT)
+* fugashi (1.3.2) (if using bert-japanese)
+* ipadic (1.0.0) (if using bert-japanese)
+* captum (0.7.0)
+* ipython (8.15.0)
+* confidence-intervals (0.0.3)
 
 ## Gender classification and attributions
 
