@@ -31,9 +31,9 @@ import utils.util as utl
 
 ATTR_CLASS = cst.MALE_INTERNAL
 ATTR_LABEL = cst.GENDERS_INTERNAL[ATTR_CLASS]
-N_LIG_STEPS = 500
+N_LIG_STEPS = 600
 LIG_BATCH_SIZE = 5
-N_LIME_SAMPLES = 500
+N_LIME_SAMPLES = 200
 # Using an alpha too big can result in null attributions: https://github.com/pytorch/captum/issues/1008
 LIME_ALPHA = 0.001
 

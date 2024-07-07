@@ -32,7 +32,7 @@ python python/classification/ft_bert.py finetune -modt <model_type> -modn <model
 **Options:**
 
 * `--statistics_file`, `-staf`: Csv file where are written statistics on the finetuning process (default: None).
-* `--learning_rate`, `-lr`: Initial learning rate for Adam (default: 5e-5).
+* `--learning_rate`, `-lr`: Initial learning rate for Adam (default: 2e-5).
 * `--weight_decay_rate`, `-wdr`: Weight decay rate (default: 0.0).
 * `--adam_epsilon`, `-ae`: Epsilon for Adam optimizer (default: 1e-8).
 * `--n_warmup_steps`, `-nws`: Number of steps for linear warmup (default: 0).
@@ -110,9 +110,9 @@ python python/classification/explainability.py {occlusion,lay_int_grad} -modt <m
 * `--max_seq_length`, `-msl`: Maximum total input sequence length after tokenization (sequences longer than this will be truncated, sequences shorter will be padded; default: 64).
 * `--criteria_string`, `-cs`: String describing a filter to apply to the examples before processing (e.g. drop examples for which the model confidence is lower than a threshold; default: None).
 * `--weight_tokens`, `-wt`: Weight examples according to the number of unique tokens (`occlusion` specifics).
-* `--n_lig_steps`, `-nls`: Number of steps used by the lig approximation method (`lay_int_grad` specifics; default: 500).
+* `--n_lig_steps`, `-nls`: Number of steps used by the lig approximation method (`lay_int_grad` specifics; default: 600).
 * `--lig_batch_size`, `-lbs`: Internal batch size per GPU/CPU for the lig method (`lay_int_grad` specifics; default: 5).
-* `--n_lime_samples`, `-nlimes`: Number of samples of the original model used by lime to train the surrogate interpretable model (`lime` specifics; default: 500).
+* `--n_lime_samples`, `-nlimes`: Number of samples of the original model used by lime to train the surrogate interpretable model (`lime` specifics; default: 200).
 * `--lime_alpha`, `-limea`: Fit coefficient for linear lasso interpretable model (`lime` specifics; default: 0.001).
 
 **Examples:**
@@ -138,7 +138,7 @@ python python/classification/explainability.py lay_int_grad -modt flaubert -modd
 Lime method:
 
 ```
-python python/classification/explainability.py lime -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/voc/lime -d "," -msl 128 -nlimes 50 -limea 0.001 -cs "[spk_gender_pred_proba] > 0.6" -srtex
+python python/classification/explainability.py lime -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/voc/lime -d "," -msl 128 -nlimes 500 -limea 0.001 -cs "[spk_gender_pred_proba] > 0.6" -srtex
 ```
 
 

@@ -51,8 +51,8 @@ MODEL_NAMES = [
     "cl-tohoku/bert-large-japanese-char-v2"
 ]
 
-# Default learning rate is 5e-5, Chris McCormick's notebook had 2e-5
-LEARNING_RATE = 5e-5
+# Default learning rate is 2e-5, as in Chris McCormick's notebook
+LEARNING_RATE = 2e-5
 WEIGHT_DECAY_RATE = 0.0
 ADAM_EPSILON = 1e-8
 # Default warmup_steps value in run_glue.py
