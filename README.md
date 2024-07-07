@@ -21,7 +21,7 @@
 **Command:**
 
 ```
-python python/classification/ft_bert.py finetune -modt <model_type> -modn <model_name> -modd <model_dir> -trnf <train_file> -valf <val_file> [OPTIONS]
+python xspeakergender/classification/ft_bert.py finetune -modt <model_type> -modn <model_name> -modd <model_dir> -trnf <train_file> -valf <val_file> [OPTIONS]
 ```
 
 **Parameters:**
@@ -49,7 +49,7 @@ python python/classification/ft_bert.py finetune -modt <model_type> -modn <model
 **Example:**
 
 ```
-python python/classification/ft_bert.py finetune -modt flaubert -modn nherve/flaubert-oral-asr_nb -modd flaubert-o_0 -trnf data/train.tsv -valf data/val.tsv -staf flaubert-o_0/training.csv -ne 10 -msl 128 -lr 5e-5
+python xspeakergender/classification/ft_bert.py finetune -modt flaubert -modn nherve/flaubert-oral-asr_nb -modd flaubert-o_0 -trnf data/train.tsv -valf data/val.tsv -staf flaubert-o_0/training.csv -ne 10 -msl 128 -lr 5e-5
 ```
 
 ### Evaluate a BERT classifier
@@ -57,7 +57,7 @@ python python/classification/ft_bert.py finetune -modt flaubert -modn nherve/fla
 **Command:**
 
 ```
-python python/classification/ft_bert.py eval -modt <model_type> -modd <model_dir> -tstf <test_file> [OPTIONS]
+python xspeakergender/classification/ft_bert.py eval -modt <model_type> -modd <model_dir> -tstf <test_file> [OPTIONS]
 ```
 
 **Parameters:**
@@ -81,7 +81,7 @@ python python/classification/ft_bert.py eval -modt <model_type> -modd <model_dir
 **Example:**
 
 ```
-python python/classification/ft_bert.py eval -modt flaubert -modn nherve/flaubert-oral-asr_nb -modd flaubert-o_0 -tstf data/test.tsv -outf flaubert-o_0/out.tsv -staf data/results.csv -d "," -msl 128
+python xspeakergender/classification/ft_bert.py eval -modt flaubert -modn nherve/flaubert-oral-asr_nb -modd flaubert-o_0 -tstf data/test.tsv -outf flaubert-o_0/out.tsv -staf data/results.csv -d "," -msl 128
 ```
 
 ### Compute attributions with XAI
@@ -89,7 +89,7 @@ python python/classification/ft_bert.py eval -modt flaubert -modn nherve/flauber
 **Command:**
 
 ```
-python python/classification/explainability.py {occlusion,lay_int_grad} -modt <model_type> -modd <model_dir> -tstf <test_file> -expd <explain_dir> [OPTIONS]
+python xspeakergender/classification/explainability.py {occlusion,lay_int_grad} -modt <model_type> -modd <model_dir> -tstf <test_file> -expd <explain_dir> [OPTIONS]
 ```
 
 **Parameters:**
@@ -123,25 +123,25 @@ python python/classification/explainability.py {occlusion,lay_int_grad} -modt <m
 Occlusion method:
 
 ```
-python python/classification/explainability.py occlusion -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/occl -d "," -msl 128 -wt -cs "[spk_gender_pred_proba] > 0.6" -srtex
+python xspeakergender/classification/explainability.py occlusion -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/occl -d "," -msl 128 -wt -cs "[spk_gender_pred_proba] > 0.6" -srtex
 ```
 
 Layer Integrated Gradients method:
 
 ```
-python python/classification/explainability.py lay_int_grad -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/lig -d "," -msl 128 -nls 100 -lbs 5 -cs "[spk_gender_pred_proba] > 0.6" -srtex
+python xspeakergender/classification/explainability.py lay_int_grad -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/lig -d "," -msl 128 -nls 100 -lbs 5 -cs "[spk_gender_pred_proba] > 0.6" -srtex
 ```
 
 Layer Integrated Gradients method, re-using the attributions previously computed:
 
 ```
-python python/classification/explainability.py lay_int_grad -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/explain/lig/selected_examples.tsv -attf flaubert-o_0/explain/lig/attributions.pt -expd flaubert-o_0/explain/lig_bis  -d "," -msl 128 -nls 100 -lbs 5 -cs "([spk_gender_pred_proba] > 0.75) & ([speaker_gender_pred] == [speaker_gender])" -srtex -noatt -novoc -nohdtl
+python xspeakergender/classification/explainability.py lay_int_grad -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/explain/lig/selected_examples.tsv -attf flaubert-o_0/explain/lig/attributions.pt -expd flaubert-o_0/explain/lig_bis  -d "," -msl 128 -nls 100 -lbs 5 -cs "([spk_gender_pred_proba] > 0.75) & ([speaker_gender_pred] == [speaker_gender])" -srtex -noatt -novoc -nohdtl
 ```
 
 Lime method:
 
 ```
-python python/classification/explainability.py lime -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/lime -d "," -msl 128 -nlimes 500 -limea 0.001 -cs "[spk_gender_pred_proba] > 0.6" -srtex
+python xspeakergender/classification/explainability.py lime -modt flaubert -modd flaubert-o_0 -tstf flaubert-o_0/out.tsv -expd flaubert-o_0/explain/lime -d "," -msl 128 -nlimes 500 -limea 0.001 -cs "[spk_gender_pred_proba] > 0.6" -srtex
 ```
 
 ## Citation
