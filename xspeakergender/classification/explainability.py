@@ -82,7 +82,7 @@ def summarize_attributions(attributions):
 
 # FUNCTIONS ############################################################################################################
 
-def occlusion(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir_path, decimal=".",
+def occlusion(model_class, tokenizer_class, model_dir_path, test_file_path, explain_dir_path, decimal=".",
               max_len=brt.MAX_SEQ_LEN, criteria_str=None, weight_tokens=False, save_exples=True, save_visual=True,
               save_attr=True, save_vocab=True, save_hd_tl=True, attr_file_path=None, sort_exples=True):
     model, tokenizer = brt.load_model(model_class, tokenizer_class, model_dir_path)
@@ -110,15 +110,15 @@ def occlusion(model_class, tokenizer_class, model_dir_path, test_file_path, voca
         print("Vocabulary cannot be extracted, for no examples were selected.")
         return
 
-    if vocab_dir_path:
-        os.makedirs(vocab_dir_path, exist_ok=True)
+    if explain_dir_path:
+        os.makedirs(explain_dir_path, exist_ok=True)
 
     # Sort examples by pred_label and pred_label_proba
     if sort_exples:
         df = df.sort_values(by=[cst.SPEAKER_GENDER_PRED, cst.SPK_GENDER_PRED_PROBA], ascending=False)
 
     if save_exples:
-        examples_file_path = os.path.join(vocab_dir_path, "selected_examples.tsv")
+        examples_file_path = os.path.join(explain_dir_path, "selected_examples.tsv")
         df.to_csv(examples_file_path, sep="\t", index=True)
 
     pred_lbl_probas = df[cst.SPK_GENDER_PRED_PROBA].tolist()
@@ -269,20 +269,20 @@ def occlusion(model_class, tokenizer_class, model_dir_path, test_file_path, voca
 
     if save_visual:
         visual = viz.visualize_text(proba_diff_vis_data_records)
-        visual_file_path = os.path.join(vocab_dir_path, "proba_diff_visual.html")
+        visual_file_path = os.path.join(explain_dir_path, "proba_diff_visual.html")
         with open(visual_file_path, "w") as file:
             file.write(visual.data)
 
         visual = viz.visualize_text(lbl_change_vis_data_records)
-        visual_file_path = os.path.join(vocab_dir_path, "lbl_change_visual.html")
+        visual_file_path = os.path.join(explain_dir_path, "lbl_change_visual.html")
         with open(visual_file_path, "w") as file:
             file.write(visual.data)
 
     if save_attr:
-        proba_diff_attr_file_path = os.path.join(vocab_dir_path, "proba_diff_attributions.pt")
+        proba_diff_attr_file_path = os.path.join(explain_dir_path, "proba_diff_attributions.pt")
         torch.save(proba_diff_attributions_list, proba_diff_attr_file_path)
 
-        lbl_change_attr_file_path = os.path.join(vocab_dir_path, "lbl_change_attributions.pt")
+        lbl_change_attr_file_path = os.path.join(explain_dir_path, "lbl_change_attributions.pt")
         torch.save(lbl_change_attributions_list, lbl_change_attr_file_path)
 
     df = pd.DataFrame(data)
@@ -295,7 +295,7 @@ def occlusion(model_class, tokenizer_class, model_dir_path, test_file_path, voca
     df[cst.M2F_LBL_REL_SCORE] = df[cst.M2F_LBL_REL_CHANGE] / df[cst.N_SENTENCES]
 
     if save_vocab:
-        vocab_file_path = os.path.join(vocab_dir_path, "vocab.tsv")
+        vocab_file_path = os.path.join(explain_dir_path, "vocab.tsv")
         df.to_csv(vocab_file_path, sep="\t", index=True, decimal=decimal, columns=cst.EXTRACT_VOC_COLUMNS)
 
     if save_hd_tl:
@@ -306,18 +306,18 @@ def occlusion(model_class, tokenizer_class, model_dir_path, test_file_path, voca
 
             df = df.sort_values([cst.F_PROBA_REL_SCORE], ascending=True)
             proba_diff_df = pd.concat([df.head(25), df.tail(25)])
-            proba_diff_vocab_file_path = os.path.join(vocab_dir_path, "n%d_proba_diff_vocab.tsv" % n)
+            proba_diff_vocab_file_path = os.path.join(explain_dir_path, "n%d_proba_diff_vocab.tsv" % n)
             columns = [cst.TOKEN, cst.N_SENTENCES, cst.F_PROBA_REL_SCORE]
             proba_diff_df.to_csv(proba_diff_vocab_file_path, sep="\t", index=True, decimal=decimal, columns=columns)
 
             df = df.sort_values([cst.M2F_LBL_REL_SCORE], ascending=True)
             lbl_change_df = pd.concat([df.head(25), df.tail(25)])
-            lbl_change_vocab_file_path = os.path.join(vocab_dir_path, "n%d_lbl_change_vocab.tsv" % n)
+            lbl_change_vocab_file_path = os.path.join(explain_dir_path, "n%d_lbl_change_vocab.tsv" % n)
             columns = [cst.TOKEN, cst.N_SENTENCES, cst.M2F_LBL_REL_SCORE]
             lbl_change_df.to_csv(lbl_change_vocab_file_path, sep="\t", index=True, decimal=decimal, columns=columns)
 
 
-def lay_int_grad(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir_path, decimal=".",
+def lay_int_grad(model_class, tokenizer_class, model_dir_path, test_file_path, explain_dir_path, decimal=".",
                  max_len=brt.MAX_SEQ_LEN, criteria_str=None, n_steps=N_LIG_STEPS, batch_size=LIG_BATCH_SIZE,
                  save_exples=True, save_visual=True, save_attr=True, save_vocab=True, save_hd_tl=True,
                  attr_file_path=None, sort_exples=True):
@@ -372,16 +372,16 @@ def lay_int_grad(model_class, tokenizer_class, model_dir_path, test_file_path, v
         print("Vocabulary cannot be extracted, for no examples were selected.")
         return
 
-    if vocab_dir_path:
+    if explain_dir_path:
         # os.makedirs triggers an error for an empty string argument
-        os.makedirs(vocab_dir_path, exist_ok=True)
+        os.makedirs(explain_dir_path, exist_ok=True)
 
     # Sort examples by pred_label and pred_label_proba
     if sort_exples:
         df = df.sort_values(by=[cst.SPEAKER_GENDER_PRED, cst.SPK_GENDER_PRED_PROBA], ascending=False)
 
     if save_exples:
-        examples_file_path = os.path.join(vocab_dir_path, "selected_examples.tsv")
+        examples_file_path = os.path.join(explain_dir_path, "selected_examples.tsv")
         df.to_csv(examples_file_path, sep="\t", index=True)
 
     pred_lbl_probas = df[cst.SPK_GENDER_PRED_PROBA].tolist()
@@ -464,12 +464,12 @@ def lay_int_grad(model_class, tokenizer_class, model_dir_path, test_file_path, v
 
     if save_visual:
         visual = viz.visualize_text(vis_data_records)
-        visual_file_path = os.path.join(vocab_dir_path, "visual.html")
+        visual_file_path = os.path.join(explain_dir_path, "visual.html")
         with open(visual_file_path, "w") as file:
             file.write(visual.data)
 
     if save_attr:
-        attr_file_path = os.path.join(vocab_dir_path, "attributions.pt")
+        attr_file_path = os.path.join(explain_dir_path, "attributions.pt")
         torch.save(attributions_list, attr_file_path)
 
     df = pd.DataFrame(data)
@@ -480,7 +480,7 @@ def lay_int_grad(model_class, tokenizer_class, model_dir_path, test_file_path, v
     df[cst.ATTR_REL_SCORE] = df[cst.ATTR_REL] / df[cst.N_OCCURRENCES]
 
     if save_vocab:
-        vocab_file_path = os.path.join(vocab_dir_path, "vocab.tsv")
+        vocab_file_path = os.path.join(explain_dir_path, "vocab.tsv")
         df.to_csv(vocab_file_path, sep="\t", index=True, decimal=decimal, columns=cst.EXTRACT_VOC2_COLUMNS)
 
     if save_hd_tl:
@@ -491,12 +491,12 @@ def lay_int_grad(model_class, tokenizer_class, model_dir_path, test_file_path, v
 
             df = df.sort_values([cst.ATTR_REL_SCORE], ascending=True)
             attr_df = pd.concat([df.head(25), df.tail(25)])
-            attr_vocab_file_path = os.path.join(vocab_dir_path, "n%d_attr_vocab.tsv" % n)
+            attr_vocab_file_path = os.path.join(explain_dir_path, "n%d_attr_vocab.tsv" % n)
             columns = [cst.TOKEN, cst.N_OCCURRENCES, cst.ATTR_REL_SCORE]
             attr_df.to_csv(attr_vocab_file_path, sep="\t", index=True, decimal=decimal, columns=columns)
 
 
-def lime(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir_path, decimal=".",
+def lime(model_class, tokenizer_class, model_dir_path, test_file_path, explain_dir_path, decimal=".",
          max_len=brt.MAX_SEQ_LEN, criteria_str=None, n_samples=N_LIME_SAMPLES, alpha=LIME_ALPHA, save_exples=True,
          save_visual=True, save_attr=True, save_vocab=True, save_hd_tl=True, attr_file_path=None, sort_exples=True):
     model, tokenizer = brt.load_model(model_class, tokenizer_class, model_dir_path)
@@ -570,16 +570,16 @@ def lime(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir
         print("Vocabulary cannot be extracted, for no examples were selected.")
         return
 
-    if vocab_dir_path:
+    if explain_dir_path:
         # os.makedirs triggers an error for an empty string argument
-        os.makedirs(vocab_dir_path, exist_ok=True)
+        os.makedirs(explain_dir_path, exist_ok=True)
 
     # Sort examples by pred_label and pred_label_proba
     if sort_exples:
         df = df.sort_values(by=[cst.SPEAKER_GENDER_PRED, cst.SPK_GENDER_PRED_PROBA], ascending=False)
 
     if save_exples:
-        examples_file_path = os.path.join(vocab_dir_path, "selected_examples.tsv")
+        examples_file_path = os.path.join(explain_dir_path, "selected_examples.tsv")
         df.to_csv(examples_file_path, sep="\t", index=True)
 
     pred_lbl_probas = df[cst.SPK_GENDER_PRED_PROBA].tolist()
@@ -663,12 +663,12 @@ def lime(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir
 
     if save_visual:
         visual = viz.visualize_text(vis_data_records)
-        visual_file_path = os.path.join(vocab_dir_path, "visual.html")
+        visual_file_path = os.path.join(explain_dir_path, "visual.html")
         with open(visual_file_path, "w") as file:
             file.write(visual.data)
 
     if save_attr:
-        attr_file_path = os.path.join(vocab_dir_path, "attributions.pt")
+        attr_file_path = os.path.join(explain_dir_path, "attributions.pt")
         torch.save(attributions_list, attr_file_path)
 
     df = pd.DataFrame(data)
@@ -679,7 +679,7 @@ def lime(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir
     df[cst.ATTR_REL_SCORE] = df[cst.ATTR_REL] / df[cst.N_OCCURRENCES]
 
     if save_vocab:
-        vocab_file_path = os.path.join(vocab_dir_path, "vocab.tsv")
+        vocab_file_path = os.path.join(explain_dir_path, "vocab.tsv")
         df.to_csv(vocab_file_path, sep="\t", index=True, decimal=decimal, columns=cst.EXTRACT_VOC2_COLUMNS)
 
     if save_hd_tl:
@@ -690,7 +690,7 @@ def lime(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir
 
             df = df.sort_values([cst.ATTR_REL_SCORE], ascending=True)
             attr_df = pd.concat([df.head(25), df.tail(25)])
-            attr_vocab_file_path = os.path.join(vocab_dir_path, "n%d_attr_vocab.tsv" % n)
+            attr_vocab_file_path = os.path.join(explain_dir_path, "n%d_attr_vocab.tsv" % n)
             columns = [cst.TOKEN, cst.N_OCCURRENCES, cst.ATTR_REL_SCORE]
             attr_df.to_csv(attr_vocab_file_path, sep="\t", index=True, decimal=decimal, columns=columns)
 
@@ -763,8 +763,8 @@ def parse_args():
                         help="tsv file that contains the examples used for evaluation")
     parser.add_argument("--statistics_file", "-staf",
                         help="csv file of gathered statistics")
-    parser.add_argument("--vocab_dir", "-vocd",
-                        help="directory where the extracted vocabulary is stored")
+    parser.add_argument("--explain_dir", "-expd",
+                        help="directory where data related to explainability is stored")
     parser.add_argument("--decimal", "-d", default=".",
                         help="character to recognize as decimal point")
     parser.add_argument("--hyperparameters", "-hyp",
@@ -774,15 +774,15 @@ def parse_args():
                              "corresponding to the evaluated examples")
 
     parser.add_argument("--dont_save_exples", "-noex", action="store_true",
-                        help="do not save selected examples in vocab_dir")
+                        help="do not save selected examples in explain_dir")
     parser.add_argument("--dont_save_visual", "-novis", action="store_true",
-                        help="do not save visualization in vocab_dir")
+                        help="do not save visualization in explain_dir")
     parser.add_argument("--dont_save_attr", "-noatt", action="store_true",
-                        help="do not save attributions in vocab_dir")
+                        help="do not save attributions in explain_dir")
     parser.add_argument("--dont_save_vocab", "-novoc", action="store_true",
-                        help="do not save full vocabulary in vocab_dir")
+                        help="do not save full vocabulary in explain_dir")
     parser.add_argument("--dont_save_hd_tl", "-nohdtl", action="store_true",
-                        help="do not save head-tail vocabulary in vocab_dir")
+                        help="do not save head-tail vocabulary in explain_dir")
     parser.add_argument("--sort_exples", "-srtex", action="store_true",
                         help="sort selected examples")
 
@@ -827,7 +827,7 @@ def main(args):
     model_dir_path = args.model_dir
     test_file_path = args.test_file
     stats_file_path = args.statistics_file
-    vocab_dir_path = args.vocab_dir
+    explain_dir_path = args.explain_dir
     decimal = args.decimal
     hyperparams = args.hyperparameters
     attr_file_path = args.attribution_file
@@ -854,19 +854,19 @@ def main(args):
     cond_column = args.cond_column
 
     if mode == "occlusion":
-        occlusion(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir_path, decimal=decimal,
+        occlusion(model_class, tokenizer_class, model_dir_path, test_file_path, explain_dir_path, decimal=decimal,
                   max_len=max_len, criteria_str=criteria_str, weight_tokens=weight_tokens, save_exples=save_exples,
                   save_visual=save_visual, save_attr=save_attr, save_vocab=save_vocab, save_hd_tl=save_hd_tl,
                   attr_file_path=attr_file_path, sort_exples=sort_exples)
 
     elif mode == "lay_int_grad":
-        lay_int_grad(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir_path, decimal=decimal,
+        lay_int_grad(model_class, tokenizer_class, model_dir_path, test_file_path, explain_dir_path, decimal=decimal,
                      max_len=max_len, criteria_str=criteria_str, n_steps=n_lig_steps, batch_size=lig_batch_size,
                      save_exples=save_exples, save_visual=save_visual, save_attr=save_attr, save_vocab=save_vocab,
                      save_hd_tl=save_hd_tl, attr_file_path=attr_file_path, sort_exples=sort_exples)
 
     elif mode == "lime":
-        lime(model_class, tokenizer_class, model_dir_path, test_file_path, vocab_dir_path, decimal=decimal,
+        lime(model_class, tokenizer_class, model_dir_path, test_file_path, explain_dir_path, decimal=decimal,
              max_len=max_len, criteria_str=criteria_str, n_samples=n_lime_samples, alpha=lime_alpha,
              save_exples=save_exples, save_visual=save_visual, save_attr=save_attr, save_vocab=save_vocab,
              save_hd_tl=save_hd_tl, attr_file_path=attr_file_path, sort_exples=sort_exples)
